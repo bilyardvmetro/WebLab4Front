@@ -1,0 +1,130 @@
+<div class="d-flex h-75 position-relative align-items-center justify-content-around">
+    <div class="flex-column card text-bg-dark border-info border-5 mb-3 rounded-3" style="width: 800px; height: 600px">
+        <div class="card-body">
+            <h3 class="card-title pt-3 pb-3">Select point coordinates & radius</h3>
+
+            <form [formGroup]="pointForm">
+                <div class="d-flex pt-3 pb-3">
+                    <div class="flex-column">
+                        <div class="card text-bg-light fs-4">
+                            <div class="card-body">
+                                X
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-column flex-grow-1">
+                        <div class="card text-bg-info fs-4">
+                            <div class="card-body">
+                                <div class="form-check-inline">
+                                    <fieldset>
+                                        @for (x of xOptions; track $index) {
+                                            <input class="form-check-input me-1" formControlName="x"
+                                                   type="radio" [id]="'radio'+$index" [value]="x">
+                                            <label class="form-check-label me-3"
+                                                   [for]="'radio'+$index">{{ x }}</label>
+                                        }
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex pt-3 pb-3">
+                    <div class="flex-column">
+                        <div class="card text-bg-light fs-4">
+                            <div class="card-body">
+                                Y
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-sm-column">
+                        <div class="card text-bg-light">
+                            <div class="card-body" style="height: 68px">
+                                <input class="form-control" style="width: 40px;" type="text" id="YValue"
+                                       [value]="this.pointForm.controls['y'].value" disabled readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-column flex-grow-1">
+                        <div class="card text-bg-info fs-4">
+                            <div class="card-body">
+                                <input formControlName="y" [value]="y" type="range" class="form-range" min="-3" max="5"
+                                       id="ySlider">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="d-flex pt-3 pb-3">
+                    <div class="flex-column">
+                        <div class="card text-bg-light fs-4">
+                            <div class="card-body">
+                                R
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-column flex-grow-1">
+                        <div class="card text-bg-info fs-4">
+                            <div class="card-body">
+                                <div class="form-check-inline">
+                                    <fieldset>
+                                        @for (r of rOptions; track $index) {
+                                            <input class="form-check-input me-1" formControlName="r"
+                                                   type="radio" [id]="'radio'+$index" [value]="r"
+                                                   (click)="updatePoints(r)">
+                                            <label class="form-check-label me-3"
+                                                   [for]="'radio'+$index">{{ r }}</label>
+                                        }
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary mt-5 mb-5" [disabled]="pointForm.invalid"
+                            (click)="OnSubmitForm()">Check
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="flex-column" style="width: 660px; height: 660px">
+        <canvas (click)="OnGraphClick($event)" id="coordinate-plane"></canvas>
+    </div>
+</div>
+
+<div class="d-flex">
+    <table class="table table-striped-columns table-hover">
+        <thead class="text-center">
+        <tr class="table-primary">
+            <th scope="col" class="border border-start-0 border-dark border-2">X</th>
+            <th scope="col" class="border border-start-0 border-dark border-2">Y</th>
+            <th scope="col" class="border border-start-0 border-dark border-2">R</th>
+            <th scope="col" class="border border-start-0 border-end-0 border-dark border-2">Result</th>
+        </tr>
+        </thead>
+        <tbody>
+            @for (row of results; track $index) {
+                <tr class="table-info text-center">
+                    <td>{{ row.x }}</td>
+                    <td>{{ row.y }}</td>
+                    <td>{{ row.r }}</td>
+                    <td>{{ row.hitResult ? "Hit" : "Miss" }}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script src="scripts/coordinate-plane.js"></script>
